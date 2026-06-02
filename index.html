@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hi-fi · Budget Wizard (all 6 steps)</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Phosphor Icons (regular + bold + fill weights) -->
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" />
+
+  <style>
+    html, body { margin: 0; padding: 0; background: #ecede8; font-family: 'Onest', system-ui, sans-serif; color: #0e0f0d; -webkit-font-smoothing: antialiased; }
+    *, *::before, *::after { box-sizing: border-box; }
+    button { font: inherit; cursor: pointer; }
+    .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+    input[type="range"]::-webkit-slider-thumb { appearance: none; }
+
+    @property --circle-x {
+      syntax: '<number>';
+      inherits: true;
+      initial-value: 0.28;
+    }
+    @keyframes pillExit {
+      /* full pill → circle (diameter = pill height) → fade out, with eased collapse */
+      0%   { transform: scaleX(1);                        opacity: 1; animation-timing-function: cubic-bezier(0.7, 0, 0.84, 0); }
+      55%  { transform: scaleX(var(--circle-x, 0.28));    opacity: 1; animation-timing-function: cubic-bezier(0.4, 0, 1, 1); }
+      100% { transform: scaleX(var(--circle-x, 0.28));    opacity: 0; }
+    }
+    @keyframes pillEnter {
+      /* fade in as circle → expand back to full pill, with eased grow */
+      0%   { transform: scaleX(var(--circle-x, 0.28));    opacity: 0; animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1); }
+      30%  { transform: scaleX(var(--circle-x, 0.28));    opacity: 1; animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); }
+      100% { transform: scaleX(1);                        opacity: 1; }
+    }
+
+    #stage-wrap { width: 100vw; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    #stage { width: 1440px; height: 900px; transform-origin: center center; flex-shrink: 0; }
+
+    /* Mobile: drop the fixed canvas, flow natively and scroll vertically */
+    body.is-mobile #stage-wrap { display: block; min-height: 0; overflow: visible; }
+    body.is-mobile #stage { width: 100%; height: auto; transform: none !important; }
+
+    /* hide the step-pill scrollbar on mobile */
+    .hifi-pillstrip::-webkit-scrollbar { display: none; }
+    .hifi-pillstrip { scrollbar-width: none; }
+  </style>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="stage-wrap">
+    <div id="stage"><div id="root"></div></div>
+  </div>
+
+  <script>
+    var MOBILE_BREAK = 820;
+    function scale() {
+      var mobile = window.innerWidth <= MOBILE_BREAK;
+      document.body.classList.toggle('is-mobile', mobile);
+      var stage = document.getElementById('stage');
+      if (mobile) {
+        stage.style.transform = 'none';
+      } else {
+        var s = Math.min(window.innerWidth / 1440, window.innerHeight / 900);
+        stage.style.transform = 'scale(' + s + ')';
+      }
+    }
+    window.addEventListener('resize', scale); scale();
+  </script>
+
+  <script type="text/babel" src="hifi-kit.jsx"></script>
+  <script type="text/babel" src="hifi-step1-income.jsx"></script>
+  <script type="text/babel" src="hifi-step2-fixed.jsx"></script>
+  <script type="text/babel" src="hifi-step3-deps.jsx"></script>
+  <script type="text/babel" src="hifi-step4-allocate.jsx"></script>
+  <script type="text/babel" src="hifi-step5-invest.jsx"></script>
+  <script type="text/babel" src="hifi-step6-plan.jsx"></script>
+
+  <script type="text/babel">
+    const INITIAL_STATE = {
+      income: 1800,
+      incomeIsGross: false,
+      taxMode: 'auto',
+      manualRate: 0.22,
+      freq: 'monthly',
+      employment: 'salaried',
+
+      fixedItems: [
+        { id: 'rent',   icon: 'home',   label: 'Rent',           amount: 800, sharedPct: 50 },
+        { id: 'util',   icon: 'bolt',   label: 'Utilities',      amount: 90 },
+        { id: 'phone',  icon: 'phone',  label: 'Phone + internet',amount: 45 },
+        { id: 'food',   icon: 'cart',   label: 'Groceries',      amount: 240 },
+        { id: 'trans',  icon: 'car',    label: 'Transport',      amount: 55 },
+        { id: 'ins',    icon: 'shield', label: 'Insurance',      amount: 45 },
+        { id: 'gym',    icon: 'gym',    label: 'Gym membership', amount: 25 },
+        { id: 'sub',    icon: 'flame',  label: 'Subscriptions',  amount: 20 },
+      ],
+      rentType: 'rent',
+
+      dependents: [
+        { id: 'd1', type: 'child', name: 'Lucía',  amount: 150 },
+        { id: 'd2', type: 'pet',   name: 'Misu',   amount: 30  },
+      ],
+
+      split: { e: 40, l: 40, f: 20 },
+      picks: ['letras', 'msci-world', 'pension'],
+    };
+
+    const STORAGE_KEY = 'budgetWizard.v2';
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) return { ...INITIAL_STATE, ...JSON.parse(raw) };
+      } catch (e) { /* ignore */ }
+      return INITIAL_STATE;
+    }
+
+    function App() {
+      const [step, setStep] = React.useState(() => {
+        const s = parseInt(new URLSearchParams(location.search).get('step'), 10);
+        return Number.isFinite(s) ? Math.max(0, Math.min(5, s)) : 0;
+      });
+      const [state, setState] = React.useState(loadState);
+      const update = (patch) => setState(s => ({ ...s, ...patch }));
+
+      // persist on every change
+      React.useEffect(() => {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+      }, [state]);
+
+      const goTo = (i) => setStep(Math.max(0, Math.min(5, i)));
+      const next = () => goTo(step + 1);
+      const back = () => goTo(step - 1);
+
+      const reset = () => {
+        try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+        setState(INITIAL_STATE);
+        setStep(0);
+      };
+
+      const StepComp = [
+        StepIncome, StepFixed, StepDeps, StepAllocate, StepInvest, StepPlan,
+      ][step];
+
+      const isMobile = useHifiMobile();
+
+      return (
+        <div style={{
+          width: isMobile ? '100%' : 1440,
+          height: isMobile ? 'auto' : 900,
+          minHeight: isMobile ? '100vh' : undefined,
+          padding: isMobile ? '14px 14px 28px' : '32px 36px',
+          background: BG,
+        }}>
+          <HifiTopBar step={step} onStep={goTo} onBack={back} canBack={step > 0} onReset={reset} />
+          <StepComp state={state} update={update} onNext={next} onReset={reset} />
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
