@@ -39,8 +39,8 @@
       100% { transform: scaleX(1);                        opacity: 1; }
     }
 
-    #stage-wrap { width: 100vw; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-    #stage { width: 1440px; height: 900px; transform-origin: center center; flex-shrink: 0; }
+    #stage-wrap { width: 100vw; min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; overflow: hidden; }
+    #stage { width: 1440px; height: 900px; transform-origin: top center; flex-shrink: 0; }
 
     /* Mobile: drop the fixed canvas, flow natively and scroll vertically */
     body.is-mobile #stage-wrap { display: block; min-height: 0; overflow: visible; }
@@ -69,7 +69,7 @@
       if (mobile) {
         stage.style.transform = 'none';
       } else {
-        var s = Math.min(window.innerWidth / 1440, window.innerHeight / 900);
+        var s = window.innerWidth / 1440;
         stage.style.transform = 'scale(' + s + ')';
       }
     }
