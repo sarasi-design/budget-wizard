@@ -56,33 +56,33 @@ function StepFixed({ state, update, onNext }) {
       <Card lime style={{ gridColumn: '1 / span 8', gridRow: '1', padding: 32 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <CardTitle kicker="Step 02 of 06" title="Your fixed monthly outgoings" subtitle="Everything you can't easily skip. Rent/mortgage handles sharing automatically." accent />
-          <Pill style={{ background: 'rgba(14,15,13,0.08)', fontWeight: 600 }}>EUR · monthly</Pill>
+          <Pill style={{ background: 'rgba(245,241,251,0.08)', fontWeight: 500 }}>EUR · monthly</Pill>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: 26, gap: 12, flexWrap: 'wrap' }}>
-          <BigAmount amount={total} size={isMobile ? 52 : 80} />
+        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: 18, gap: 12, flexWrap: 'wrap' }}>
+          <BigAmount amount={total} size={isMobile ? 48 : 58} weight={400} />
           <div style={{ textAlign: 'right' }}>
-            <Eyebrow style={{ color: 'rgba(14,15,13,0.78)' }}>Ratio to net income</Eyebrow>
+            <Eyebrow style={{ color: 'rgba(245,241,251,0.92)' }}>Ratio to net income</Eyebrow>
             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'flex-end', marginTop: 4 }}>
-              <span style={{ fontSize: isMobile ? 38 : 50, fontWeight: 700, letterSpacing: -1.5, lineHeight: 1 }}>{ratioPct}</span>
-              <span style={{ fontSize: 22, fontWeight: 600, marginLeft: 2 }}>%</span>
+              <span style={{ fontSize: isMobile ? 34 : 40, fontWeight: 400, letterSpacing: -1.2, lineHeight: 1 }}>{ratioPct}</span>
+              <span style={{ fontSize: 22, fontWeight: 500, marginLeft: 2 }}>%</span>
             </div>
-            <div style={{ fontSize: 12, color: 'rgba(14,15,13,0.78)', marginTop: 4, fontWeight: 500 }}>
+            <div style={{ fontSize: 14, color: 'rgba(245,241,251,0.92)', marginTop: 4, fontWeight: 400 }}>
               {healthy ? 'Healthy — under 55%.' : warn ? 'Tight — over 70% is risky.' : 'Workable — under 70%.'}
             </div>
           </div>
         </div>
 
         {/* ratio bar with thresholds */}
-        <div style={{ marginTop: 22, position: 'relative', height: 22 }}>
-          <div style={{ position: 'absolute', left: 0, right: 0, top: 4, bottom: 4, background: 'rgba(14,15,13,0.12)', borderRadius: 999, overflow: 'hidden' }}>
+        <div style={{ marginTop: 14, position: 'relative', height: 22 }}>
+          <div style={{ position: 'absolute', left: 0, right: 0, top: 8, bottom: 8, background: 'rgba(245,241,251,0.12)', borderRadius: 999, overflow: 'hidden' }}>
             <div style={{ width: `${Math.min(100, ratioPct)}%`, height: '100%', background: INK, borderRadius: 999 }} />
           </div>
           {/* thresholds */}
-          <div style={{ position: 'absolute', left: '55%', top: 0, bottom: 0, width: 2, background: 'rgba(14,15,13,0.45)' }} />
-          <div style={{ position: 'absolute', left: '70%', top: 0, bottom: 0, width: 2, background: 'rgba(14,15,13,0.45)' }} />
-          <div style={{ position: 'absolute', left: '55%', top: -16, transform: 'translateX(-50%)', fontSize: 9, fontWeight: 700, color: 'rgba(14,15,13,0.78)', letterSpacing: 0.5 }}>55%</div>
-          <div style={{ position: 'absolute', left: '70%', top: -16, transform: 'translateX(-50%)', fontSize: 9, fontWeight: 700, color: 'rgba(14,15,13,0.78)', letterSpacing: 0.5 }}>70%</div>
+          <div style={{ position: 'absolute', left: '55%', top: 5, bottom: 5, width: 2, background: 'rgba(245,241,251,0.45)' }} />
+          <div style={{ position: 'absolute', left: '70%', top: 5, bottom: 5, width: 2, background: 'rgba(245,241,251,0.45)' }} />
+          <div style={{ position: 'absolute', left: '55%', top: -20, transform: 'translateX(-50%)', fontSize: 14, fontWeight: 500, color: 'rgba(245,241,251,0.92)', letterSpacing: 0.5 }}>55%</div>
+          <div style={{ position: 'absolute', left: '70%', top: -20, transform: 'translateX(-50%)', fontSize: 14, fontWeight: 500, color: 'rgba(245,241,251,0.92)', letterSpacing: 0.5 }}>70%</div>
         </div>
       </Card>
 
@@ -94,7 +94,7 @@ function StepFixed({ state, update, onNext }) {
             <button key={t} onClick={() => update({ rentType: t })} style={{
               border: 'none', background: state.rentType === t ? INK : 'transparent',
               color: state.rentType === t ? LIME : INK,
-              padding: '6px 12px', borderRadius: 999, fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
+              padding: '6px 12px', borderRadius: 999, fontSize: 14, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit',
               whiteSpace: 'nowrap',
             }}>{t === 'own' ? 'Owned' : t === 'rent' ? 'Rent' : 'Mortgage'}</button>
           ))}
@@ -103,25 +103,26 @@ function StepFixed({ state, update, onNext }) {
         {state.rentType !== 'own' ? (
           <>
             <div style={{ marginTop: 18, display: 'flex', alignItems: 'baseline', gap: 6 }}>
-              <span style={{ fontSize: 22, fontWeight: 600 }}>€</span>
+              <span style={{ fontSize: 22, fontWeight: 500 }}>€</span>
               <AutoInput
                 value={rentItem.amount.toLocaleString('en-GB')}
+                ariaLabel={(state.rentType === 'rent' ? 'Monthly rent' : 'Monthly mortgage') + ' in euros'}
                 onChange={e => {
                   const v = parseInt(e.target.value.replace(/[^\d]/g,''),10) || 0;
                   setItem('rent', { amount: v });
                 }}
                 fontSize={42} fontWeight={700} letterSpacing={-1} color={INK}
               />
-              <span style={{ fontSize: 12, color: INK_3, fontWeight: 500 }}>/ mo {state.rentType === 'rent' ? 'rent' : 'mortgage'}</span>
+              <span style={{ fontSize: 14, color: INK_3, fontWeight: 400 }}>/ mo {state.rentType === 'rent' ? 'rent' : 'mortgage'}</span>
             </div>
 
             <div style={{ marginTop: 18 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, gap: 8 }}>
-                <Eyebrow style={{ fontSize: 10, whiteSpace: 'nowrap' }}>Your share</Eyebrow>
-                <span className="mono" style={{ fontSize: 12, color: INK_2, fontWeight: 500, whiteSpace: 'nowrap' }}>{rentItem.sharedPct}% = {hEur(rentItem.amount * rentItem.sharedPct / 100)}</span>
+                <Eyebrow style={{ fontSize: 14, whiteSpace: 'nowrap' }}>Your share</Eyebrow>
+                <span className="mono" style={{ fontSize: 14, color: INK_2, fontWeight: 400, whiteSpace: 'nowrap' }}>{rentItem.sharedPct}% = {hEur(rentItem.amount * rentItem.sharedPct / 100)}</span>
               </div>
-              <LimeSlider value={rentItem.sharedPct} onChange={e => setItem('rent', { sharedPct: parseInt(e.target.value, 10) })} min={0} max={100} step={5} />
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4, fontSize: 10, color: INK_3, fontWeight: 600 }}>
+              <LimeSlider value={rentItem.sharedPct} ariaLabel="Your share of housing cost, percent" onChange={e => setItem('rent', { sharedPct: parseInt(e.target.value, 10) })} min={0} max={100} step={5} />
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4, fontSize: 14, color: INK_3, fontWeight: 500 }}>
                 <span>0% (split equally w/ many)</span><span>100% (you pay alone)</span>
               </div>
             </div>
@@ -134,10 +135,10 @@ function StepFixed({ state, update, onNext }) {
       </Card>
 
       {/* ITEMS list */}
-      <Card style={{ gridColumn: '1 / span 8', gridRow: '2', padding: 28, display: 'flex', flexDirection: 'column' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 18 }}>
+      <Card style={{ gridColumn: '1 / span 8', gridRow: '2', padding: 24, display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
           <CardTitle kicker={`${listItems.length} items`} title="Itemised costs" />
-          <Pill onClick={addItem} style={{ background: SOFT, fontWeight: 600, cursor: 'pointer' }}>
+          <Pill onClick={addItem} style={{ background: SOFT, fontWeight: 500, cursor: 'pointer' }}>
             <FixedIcon name="plus" size={14} />
             Add item
           </Pill>
@@ -154,7 +155,7 @@ function StepFixed({ state, update, onNext }) {
                 }}>
                   <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                     {ICON_CHOICES.map(ic => (
-                      <button key={ic} onClick={() => setItem(it.id, { icon: ic })} style={{
+                      <button key={ic} onClick={() => setItem(it.id, { icon: ic })} aria-label={'Icon: ' + ic} aria-pressed={it.icon === ic} style={{
                         width: 30, height: 30, borderRadius: 9, cursor: 'pointer', border: 'none',
                         background: it.icon === ic ? INK : SOFT, color: it.icon === ic ? LIME : INK,
                         display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
@@ -165,21 +166,23 @@ function StepFixed({ state, update, onNext }) {
                     value={it.label}
                     onChange={e => setItem(it.id, { label: e.target.value })}
                     placeholder="Label"
-                    style={{ border: `1px solid ${RULE}`, borderRadius: 10, padding: '8px 10px', fontFamily: 'inherit', fontSize: 13, fontWeight: 600, color: INK, outline: 'none', background: SOFT }}
+                    aria-label="Expense label"
+                    style={{ border: `1px solid ${RULE}`, borderRadius: 10, padding: '8px 10px', fontFamily: 'inherit', fontSize: 14, fontWeight: 500, color: INK, outline: 'none', background: SOFT }}
                   />
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <div style={{ flex: 1, display: 'flex', alignItems: 'baseline', gap: 4, border: `1px solid ${RULE}`, borderRadius: 10, padding: '8px 10px', background: SOFT }}>
-                      <span style={{ fontSize: 14, fontWeight: 600 }}>€</span>
+                      <span style={{ fontSize: 14, fontWeight: 500 }}>€</span>
                       <AutoInput
                         value={it.amount.toLocaleString('en-GB')}
+                        ariaLabel={(it.label || 'Expense') + ' amount in euros'}
                         onChange={e => setItem(it.id, { amount: parseInt(e.target.value.replace(/[^\d]/g,''),10) || 0 })}
                         fontSize={18} fontWeight={700} letterSpacing={-0.3} color={INK}
                       />
                     </div>
-                    <button onClick={() => removeItem(it.id)} title="Delete" style={{ width: 36, height: 36, borderRadius: 10, border: 'none', cursor: 'pointer', background: SOFT, color: INK_2, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <button onClick={() => removeItem(it.id)} title="Delete" aria-label={'Delete ' + (it.label || 'expense')} style={{ width: 36, height: 36, borderRadius: 10, border: 'none', cursor: 'pointer', background: SOFT, color: INK_2, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Icon name="trash" weight="bold" size={14} />
                     </button>
-                    <button onClick={() => setEditingId(null)} title="Done" style={{ width: 36, height: 36, borderRadius: 10, border: 'none', cursor: 'pointer', background: INK, color: LIME, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <button onClick={() => setEditingId(null)} title="Done" aria-label="Done editing" style={{ width: 36, height: 36, borderRadius: 10, border: 'none', cursor: 'pointer', background: INK, color: LIME, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Icon name="check" weight="bold" size={14} />
                     </button>
                   </div>
@@ -189,7 +192,7 @@ function StepFixed({ state, update, onNext }) {
             return (
               <div key={it.id} style={{
                 display: 'flex', alignItems: 'center', gap: 14,
-                background: SOFT, borderRadius: 18, padding: '14px 18px',
+                background: SOFT, borderRadius: 16, padding: '10px 16px',
               }}>
                 <div style={{
                   width: 40, height: 40, borderRadius: 12,
@@ -200,12 +203,12 @@ function StepFixed({ state, update, onNext }) {
                   <FixedIcon name={it.icon} size={20} />
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: INK, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{it.label}</div>
+                  <div style={{ fontSize: 14, fontWeight: 500, color: INK, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{it.label}</div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                  <div className="mono" style={{ fontSize: 16, fontWeight: 600, color: INK }}>{hEur(it.amount)}</div>
+                  <div className="mono" style={{ fontSize: 16, fontWeight: 500, color: INK }}>{hEur(it.amount)}</div>
                 </div>
-                <button onClick={() => setEditingId(it.id)} style={{ background: 'transparent', border: 'none', color: INK_3, cursor: 'pointer', padding: 6 }}>
+                <button onClick={() => setEditingId(it.id)} aria-label={'Edit ' + it.label} style={{ background: 'transparent', border: 'none', color: INK_3, cursor: 'pointer', padding: 6 }}>
                   <FixedIcon name="edit" size={14} />
                 </button>
               </div>
@@ -219,17 +222,17 @@ function StepFixed({ state, update, onNext }) {
         <Card style={{ padding: 22, flex: 1 }}>
           <Eyebrow>Breakdown</Eyebrow>
           <div style={{ marginTop: 14 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, marginBottom: 8, fontSize: 12, color: INK_2, fontWeight: 500 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, marginBottom: 8, fontSize: 14, color: INK_2, fontWeight: 400 }}>
               <span style={{ whiteSpace: 'nowrap' }}>Items + sharing</span>
-              <span className="mono" style={{ color: INK, fontWeight: 600, whiteSpace: 'nowrap' }}>{hEur(totalRaw)}</span>
+              <span className="mono" style={{ color: INK, fontWeight: 500, whiteSpace: 'nowrap' }}>{hEur(totalRaw)}</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, fontSize: 12, color: INK_2, fontWeight: 500 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, fontSize: 14, color: INK_2, fontWeight: 400 }}>
               <span style={{ whiteSpace: 'nowrap' }}>Dependents (step 03)</span>
-              <span className="mono" style={{ color: depTotal > 0 ? INK : INK_3, fontWeight: 600, whiteSpace: 'nowrap' }}>{hEur(depTotal)}</span>
+              <span className="mono" style={{ color: depTotal > 0 ? INK : INK_3, fontWeight: 500, whiteSpace: 'nowrap' }}>{hEur(depTotal)}</span>
             </div>
             <div style={{ height: 1, background: RULE, margin: '12px 0' }} />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12 }}>
-              <span style={{ fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap' }}>Total fixed</span>
+              <span style={{ fontSize: 14, fontWeight: 500, whiteSpace: 'nowrap' }}>Total fixed</span>
               <BigAmount amount={total} size={28} decColor={INK_3} />
             </div>
           </div>
@@ -237,11 +240,6 @@ function StepFixed({ state, update, onNext }) {
             {warn ? 'Above 70% leaves little for savings. Consider trimming a category before continuing.' : healthy ? 'Plenty of room for emergency fund + long-term investing.' : 'Workable. You\'ll have leftover for at least one savings goal.'}
           </Note>
         </Card>
-
-        <DarkCTA onClick={onNext} style={{ width: '100%', justifyContent: 'center', padding: '16px 22px', borderRadius: 24 }}>
-          Continue to dependents
-          <Icon name="arrow-right" weight="bold" size={14} />
-        </DarkCTA>
       </div>
     </HifiStage>
   );

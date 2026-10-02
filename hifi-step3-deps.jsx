@@ -40,16 +40,16 @@ function StepDeps({ state, update, onNext }) {
 
         <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: 26 }}>
           <div>
-            <Eyebrow style={{ color: 'rgba(14,15,13,0.78)' }}>Monthly cost for {deps.length} {deps.length === 1 ? 'person' : 'people / pets'}</Eyebrow>
-            <BigAmount amount={total} size={80} style={{ marginTop: 6 }} />
+            <Eyebrow style={{ color: 'rgba(245,241,251,0.92)' }}>Monthly cost for {deps.length} {deps.length === 1 ? 'person' : 'people / pets'}</Eyebrow>
+            <BigAmount amount={total} size={58} weight={400} style={{ marginTop: 6 }} />
           </div>
           <div style={{ textAlign: 'right' }}>
-            <Eyebrow style={{ color: 'rgba(14,15,13,0.78)' }}>Per year</Eyebrow>
+            <Eyebrow style={{ color: 'rgba(245,241,251,0.92)' }}>Per year</Eyebrow>
             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'flex-end', marginTop: 4 }}>
-              <span style={{ fontSize: 18, fontWeight: 600, marginRight: 2 }}>€</span>
-              <span style={{ fontSize: 42, fontWeight: 700, letterSpacing: -1.2, lineHeight: 1 }}>{Math.round(total*12).toLocaleString('en-GB')}</span>
+              <span style={{ fontSize: 18, fontWeight: 500, marginRight: 2 }}>€</span>
+              <span style={{ fontSize: 32, fontWeight: 400, letterSpacing: -1, lineHeight: 1 }}>{Math.round(total*12).toLocaleString('en-GB')}</span>
             </div>
-            <div style={{ fontSize: 11, color: 'rgba(14,15,13,0.72)', marginTop: 4, fontWeight: 500 }}>{deps.length > 0 ? `~${hEur(total/deps.length)}/mo each` : 'Add anyone you support'}</div>
+            <div style={{ fontSize: 14, color: 'rgba(245,241,251,0.92)', marginTop: 4, fontWeight: 400 }}>{deps.length > 0 ? `~${hEur(total/deps.length)}/mo each` : 'Add anyone you support'}</div>
           </div>
         </div>
       </Card>
@@ -65,7 +65,7 @@ function StepDeps({ state, update, onNext }) {
               color: draftType === t.v ? LIME : INK,
               padding: '8px 12px', borderRadius: 999,
               display: 'inline-flex', alignItems: 'center', gap: 6,
-              fontSize: 12, fontWeight: 600,
+              fontSize: 14, fontWeight: 500,
             }}>
               <DepIcon type={t.v} size={14} />
               {t.label}
@@ -75,7 +75,7 @@ function StepDeps({ state, update, onNext }) {
         <button onClick={addDep} style={{
           marginTop: 18, width: '100%', padding: '14px 18px',
           background: LIME, color: INK, border: 'none', borderRadius: 18,
-          fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit',
+          fontSize: 14, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit',
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
         }}>
           <Icon name="plus" weight="bold" size={14} />
@@ -88,13 +88,13 @@ function StepDeps({ state, update, onNext }) {
         <Card style={{ gridColumn: '1 / span 8', padding: 28, display: 'flex', flexDirection: 'column' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 18 }}>
             <CardTitle kicker={`${deps.length} entries`} title="Your dependents" />
-            <Pill style={{ background: SOFT, fontWeight: 600 }}>Order by cost</Pill>
+            <Pill style={{ background: SOFT, fontWeight: 500 }}>Order by cost</Pill>
           </div>
 
           {deps.length === 0 ? (
             <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 8, color: INK_3 }}>
-              <div style={{ fontSize: 14, fontWeight: 500 }}>No dependents added yet.</div>
-              <div style={{ fontSize: 12 }}>Pick a type on the right →</div>
+              <div style={{ fontSize: 14, fontWeight: 400 }}>No dependents added yet.</div>
+              <div style={{ fontSize: 14 }}>Pick a type on the right →</div>
             </div>
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
@@ -108,27 +108,28 @@ function StepDeps({ state, update, onNext }) {
                       <DepIcon type={d.type} size={22} />
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <input value={d.name} onChange={e => editDep(d.id, { name: e.target.value })} style={{
+                      <input value={d.name} onChange={e => editDep(d.id, { name: e.target.value })} aria-label="Dependent name" style={{
                         width: '100%', border: 'none', outline: 'none', background: 'transparent',
-                        fontSize: 15, fontWeight: 700, color: INK, fontFamily: 'inherit', padding: 0,
+                        fontSize: 15, fontWeight: 500, color: INK, fontFamily: 'inherit', padding: 0,
                       }} />
-                      <div style={{ fontSize: 11, color: INK_3, fontWeight: 600, letterSpacing: 0.5, textTransform: 'uppercase', marginTop: 2 }}>{d.type}</div>
+                      <div style={{ fontSize: 14, color: INK_3, fontWeight: 500, letterSpacing: 0.5, textTransform: 'uppercase', marginTop: 2 }}>{d.type}</div>
                     </div>
-                    <button onClick={() => removeDep(d.id)} style={{ background: 'transparent', border: 'none', color: INK_3, cursor: 'pointer', padding: 4 }}>
+                    <button onClick={() => removeDep(d.id)} aria-label={'Remove ' + (d.name || 'dependent')} style={{ background: 'transparent', border: 'none', color: INK_3, cursor: 'pointer', padding: 4 }}>
                       <Icon name="trash" weight="bold" size={14} />
                     </button>
                   </div>
                   <div style={{ marginTop: 14, display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 8 }}>
                     <div style={{ display: 'flex', alignItems: 'baseline' }}>
-                      <span style={{ fontSize: 16, fontWeight: 600, marginRight: 2 }}>€</span>
+                      <span style={{ fontSize: 16, fontWeight: 500, marginRight: 2 }}>€</span>
                       <AutoInput
                         value={d.amount.toLocaleString('en-GB')}
+                        ariaLabel={'Monthly cost for ' + (d.name || 'dependent') + ' in euros'}
                         onChange={e => editDep(d.id, { amount: parseInt(e.target.value.replace(/[^\d]/g,''),10) || 0 })}
                         fontSize={32} fontWeight={700} letterSpacing={-0.5} color={INK}
                       />
-                      <span style={{ fontSize: 11, color: INK_3, fontWeight: 500, marginLeft: 4 }}>/ mo</span>
+                      <span style={{ fontSize: 14, color: INK_3, fontWeight: 400, marginLeft: 4 }}>/ mo</span>
                     </div>
-                    <span style={{ fontSize: 10, color: INK_3, fontWeight: 600, letterSpacing: 0.5, textTransform: 'uppercase', whiteSpace: 'nowrap' }}>{hEur(d.amount*12)}/yr</span>
+                    <span style={{ fontSize: 14, color: INK_3, fontWeight: 500, letterSpacing: 0.5, textTransform: 'uppercase', whiteSpace: 'nowrap' }}>{hEur(d.amount*12)}/yr</span>
                   </div>
                 </div>
               ))}
@@ -147,7 +148,7 @@ function StepDeps({ state, update, onNext }) {
                 'Money sent to family',
                 'Anyone you cover regularly',
               ].map((t, i) => (
-                <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 12, color: INK_2, fontWeight: 500 }}>
+                <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 14, color: INK_2, fontWeight: 400 }}>
                   <span style={{ width: 5, height: 5, borderRadius: 999, background: INK, marginTop: 6, flexShrink: 0 }} />
                   {t}
                 </li>
@@ -157,11 +158,6 @@ function StepDeps({ state, update, onNext }) {
               These add to fixed costs from step 02. The leftover gets smaller — that's expected and the maths still works.
             </Note>
           </Card>
-
-          <DarkCTA onClick={onNext} style={{ width: '100%', justifyContent: 'center', padding: '16px 22px', borderRadius: 24 }}>
-            Continue to allocate
-            <Icon name="arrow-right" weight="bold" size={14} />
-          </DarkCTA>
         </div>
       </div>
     </HifiStage>
